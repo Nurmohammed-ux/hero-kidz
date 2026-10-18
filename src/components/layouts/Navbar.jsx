@@ -60,8 +60,8 @@ const Navbar = () => {
         <ul className="menu menu-horizontal px-1">{nav}</ul>
       </div>
       <div className="navbar-end space-x-3">
-        <Link href={"/cart"} className="btn">
-          <FiShoppingCart className="text-primary" />
+        <Link href={"/cart"} className="btn bg-primary hover:btn-outline">
+          <FiShoppingCart className="text-white" />
         </Link>
        <AuthButtons />
       </div>

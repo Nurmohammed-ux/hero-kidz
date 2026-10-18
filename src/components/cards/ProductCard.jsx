@@ -1,38 +1,12 @@
 "use client";
-import { useSession } from "next-auth/react";
+
 import Image from "next/image";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
-import { useRouter } from "next/navigation";
-import { FaStar, FaShoppingCart, FaEye } from "react-icons/fa";
-import Swal from "sweetalert2";
+import { FaStar, FaEye } from "react-icons/fa";
+import CartButton from "../buttons/CartButton";
 
 const ProductCard = ({ product }) => {
-  const router = useRouter();
-  const { status } = useSession();
-  const isLogin = status === "authenticated";
-  const path = usePathname();
-
   const { title, image, price, discount, ratings, reviews, sold } = product;
-
-  const addToCart = () => {
-    if (isLogin) {
-      Swal.fire({
-        title: "Added to Cart! 🛒",
-        html: `Added <b>${title}</b> to your shopping cart.`,
-        icon: "success",
-        confirmButtonText: "Continue Shopping",
-        confirmButtonColor: "oklch(65% 0.23 35)",
-        customClass: {
-          popup: "rounded-3xl p-6 font-sans",
-          confirmButton: "rounded-xl font-bold px-6 py-3 text-white shadow-md",
-        },
-        buttonsStyling: true,
-      });
-    } else {
-      router.push(`/login?callbackUrl=${path}`);
-    }
-  };
 
   // Calculate discount price if discount exists
   const discountedPrice = discount
@@ -106,14 +80,7 @@ const ProductCard = ({ product }) => {
             <FaEye className="h-4.5 w-4.5" />
             Details
           </Link>
-
-          <button
-            onClick={() => addToCart()}
-            className="btn btn-lg btn-primary rounded-xl flex items-center justify-center gap-1.5 text-sm font-semibold shadow-sm hover:bg-white hover:text-primary hover:shadow-md hover:shadow-primary/30"
-          >
-            <FaShoppingCart className="h-4 w-4" />
-            Add
-          </button>
+          <CartButton product={product} />
         </div>
       </div>
     </div>

@@ -11,6 +11,10 @@ const nextConfig = {
         protocol: "https",
         hostname: "i.ibb.co", // Adding standard imgbb domain just in case
       },
+      {
+        protocol: 'https',
+        hostname: 'images.unsplash.com',
+      },
     ],
   },
 };

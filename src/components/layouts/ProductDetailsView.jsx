@@ -3,7 +3,6 @@ import { useState } from "react";
 import Image from "next/image";
 import {
   FaStar,
-  FaShoppingCart,
   FaCheckCircle,
   FaQuestionCircle,
   FaShieldAlt,
@@ -11,17 +10,12 @@ import {
   FaMinus,
   FaPlus,
 } from "react-icons/fa";
-import { usePathname, useRouter } from "next/navigation";
-import { useSession } from "next-auth/react";
-import Swal from "sweetalert2";
+import CartButton from "../buttons/CartButton";
+import Link from "next/link";
 
 const ProductDetailsView = ({ product, banglaFontClass }) => {
   const [quantity, setQuantity] = useState(1);
   const [activeTab, setActiveTab] = useState("description");
-  const router = useRouter();
-  const path = usePathname();
-  const { status } = useSession();
-  const isLogin = status === "authenticated";
 
   if (!product) return null;
 
@@ -38,25 +32,6 @@ const ProductDetailsView = ({ product, banglaFontClass }) => {
     ratings,
     info,
   } = product;
-
-  const addToCart = () => {
-    if (isLogin) {
-      Swal.fire({
-      title: "Added to Cart! 🛒",
-      html: `Added <b>${quantity}</b> x <b>${title}</b> to your shopping cart.`,
-      icon: "success",
-      confirmButtonText: "Continue Shopping",
-      confirmButtonColor: "oklch(65% 0.23 35)",
-      customClass: {
-        popup: "rounded-3xl p-6 font-sans",
-        confirmButton: "rounded-xl font-bold px-6 py-3 text-white shadow-md",
-      },
-      buttonsStyling: true,
-    });
-    } else {
-      router.push(`/login?callbackUrl=${path}`);
-    }
-  };
 
   // Calculate discounted price
   const discountedPrice = discount
@@ -181,21 +156,13 @@ const ProductDetailsView = ({ product, banglaFontClass }) => {
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-4">
-              <button
-                onClick={() => addToCart()}
-                className="btn btn-lg btn-primary rounded-2xl shadow-md hover:shadow-lg hover:shadow-primary/30 flex items-center justify-center gap-2 font-bold hover:bg-white hover:text-primary"
-              >
-                <FaShoppingCart className="h-5 w-5" />
-                Add to Cart
-              </button>
-              <button
-                onClick={() =>
-                  alert(`Proceeding to checkout for ${quantity}x ${title}`)
-                }
+              <CartButton product={product} />
+              <Link
+                href={"/cart"}
                 className="btn btn-lg btn-outline border-primary text-primary hover:bg-primary hover:text-white rounded-2xl font-bold"
               >
                 Buy Now
-              </button>
+              </Link>
             </div>
           </div>
 
