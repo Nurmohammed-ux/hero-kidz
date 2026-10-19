@@ -5,14 +5,11 @@ import bcrypt from "bcryptjs";
 
 export const postUser = async (payload) => {
   const { email, password, name } = payload;
-  // check payload
   if (!email || !password) return null;
 
-  // check if user exist
   const isExist = await dbConnect(collections.USERS).findOne({ email });
   if (isExist) return null;
 
-  // create user
   const newUser = {
     provider: "credentials",
     email,
@@ -21,7 +18,6 @@ export const postUser = async (payload) => {
     role: "user",
   };
 
-  // insert user
   const result = await dbConnect(collections.USERS).insertOne(newUser);
 
   if (result.acknowledged) {
@@ -30,15 +26,21 @@ export const postUser = async (payload) => {
 };
 
 export const loginUser = async (payload) => {
-  const { email, password, name } = payload;
+  const { email, password } = payload;
   if (!email || !password) return null;
 
   const user = await dbConnect(collections.USERS).findOne({ email });
-  if (!user) return null;
+  if (!user || !user.password) return null; // Ensure user exists and has a password
 
   const isMatched = await bcrypt.compare(password, user.password);
   if (isMatched) {
-    return user;
+    // 🛠️ FIX: Convert MongoDB ObjectId to string to prevent serialization errors
+    return {
+      id: user._id.toString(),
+      name: user.name,
+      email: user.email,
+      role: user.role || "user",
+    };
   } else {
     return null;
   }

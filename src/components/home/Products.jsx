@@ -5,7 +5,7 @@ import ProductCard from "../cards/ProductCard";
 const Products = async () => {
   const products = (await getProducts()) || [];
   return (
-    <section className="py-8 px-4 sm:px-6 lg:px-8 mt-8">
+    <section className="py-8 px-8 mt-8">
       {/* Section Header */}
       <div className="text-center mb-12 space-y-6">
         {/* Requested Launch Discount Badge */}
